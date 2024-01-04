@@ -4,13 +4,25 @@ const loadData = async () => {
     const data = await res.json();
     dataShow(data.data.tools);
 }
+
+const loadSpiner = (isLoading) => {
+    const getSpiner = document.getElementById('spiner');
+    if (isLoading) {
+        getSpiner.classList.remove('d-none');
+
+    } else {
+        getSpiner.classList.add('d-none');
+    }
+
+}
 const dataShow = (data) => {
     // console.log(data)
+    loadSpiner(true);
     const cardContainer = document.getElementById('card-container');
     data.forEach(data => {
-     console.log(data.id)
+        console.log(data.id)
         const addNewDiv = document.createElement('div');
-        addNewDiv.classList.add('col','mt-3');
+        addNewDiv.classList.add('col', 'mt-3');
         addNewDiv.innerHTML = `
     <div class="card" style="width: 20rem;">
                 <img src="${data.image}" class="card-img-top" alt="...">
@@ -35,13 +47,13 @@ const dataShow = (data) => {
                                     </svg><span class="ms-1">${data.published_in}</span></p>
                             </div>
                             <div class="col">
-                                <a href="#" class="float-end">
+                                <button type="button" href="#" class="float-end" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
                                         class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
                                         <path
                                             d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z" />
                                     </svg>
-                                </a>
+                                </button>
                             </div>
 
                         </div>
@@ -51,9 +63,10 @@ const dataShow = (data) => {
     
     `;
         cardContainer.appendChild(addNewDiv);
-        
+
     });
-   
-    
+
+    loadSpiner(false);
+
 }
 loadData();
