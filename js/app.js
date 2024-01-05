@@ -1,8 +1,8 @@
-const loadData = async () => {
+const loadData = async (datalimit) => {
     const url = 'https://openapi.programming-hero.com/api/ai/tools';
     const res = await fetch(url);
     const data = await res.json();
-    dataShow(data.data.tools);
+    dataShow(data.data.tools,datalimit);
 }
 
 const loadSpiner = (isLoading) => {
@@ -15,14 +15,24 @@ const loadSpiner = (isLoading) => {
     }
 
 }
-const dataShow = (data) => {
-    // console.log(data)
+const dataShow = (data,datalimit) => {
+    const getseemoreBtn = document.getElementById('seemore-btn');
+    if(datalimit && data.length>4){
+        data=data.slice(0,5);
+        getseemoreBtn.classList.remove('d-none');
+    }else{
+        getseemoreBtn.classList.add('d-none');
+      
+    }
+  
+   
     loadSpiner(true);
     const cardContainer = document.getElementById('card-container');
     data.forEach(data => {
-        console.log(data.id)
+        
         const addNewDiv = document.createElement('div');
         addNewDiv.classList.add('col', 'mt-3');
+        
         addNewDiv.innerHTML = `
     <div class="card" style="width: 20rem;">
                 <img src="${data.image}" class="card-img-top" alt="...">
@@ -47,13 +57,13 @@ const dataShow = (data) => {
                                     </svg><span class="ms-1">${data.published_in}</span></p>
                             </div>
                             <div class="col">
-                                <button type="button" href="#" class="float-end" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                <a onclick="detailsInModal('${data.id}')" href="#" class="float-end" data-bs-toggle="modal" data-bs-target="#modal">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
                                         class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
                                         <path
                                             d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z" />
                                     </svg>
-                                </button>
+                                </a>
                             </div>
 
                         </div>
@@ -69,4 +79,52 @@ const dataShow = (data) => {
     loadSpiner(false);
 
 }
-loadData();
+document.getElementById('seemore-btn').addEventListener('click',function(){
+    loadData();
+    
+})
+
+const detailsInModal= async(id)=>{
+    const url ='https://openapi.programming-hero.com/api/ai/tool/${id}';
+    const res=await fetch(url);
+    const data=await res.json();
+    
+    setDataOnModal(data.data);
+
+}
+const setDataOnModal=(data)=>{
+    console.log(data);
+    const getModalSection=document.getElementById('modal-section');
+    const createNewDivInModalSection=document.createElement('div');
+    createNewDivInModalSection.innerHTML=`
+     <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        
+                        <div class="modal-body d-flex flex-row m-5 gap-3">
+                            <div class="card rounded-3  " style="width: 18rem;">
+                                <div class="card-body">
+
+                                </div>
+                            </div>
+                            <div class="rounded-3  card" style="width: 18rem;">
+                                <div class="card-body">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+    
+    `;
+    getModalSection.appendChild(createNewDivInModalSection);
+    
+}
+
+loadData(4);
