@@ -2,7 +2,7 @@ const loadData = async (datalimit) => {
     const url = 'https://openapi.programming-hero.com/api/ai/tools';
     const res = await fetch(url);
     const data = await res.json();
-    dataShow(data.data.tools,datalimit);
+    dataShow(data.data.tools, datalimit);
 }
 
 const loadSpiner = (isLoading) => {
@@ -15,24 +15,25 @@ const loadSpiner = (isLoading) => {
     }
 
 }
-const dataShow = (data,datalimit) => {
+const dataShow = (data, datalimit) => {
     const getseemoreBtn = document.getElementById('seemore-btn');
-    if(datalimit && data.length>4){
-        data=data.slice(0,5);
+    if (datalimit && data.length > 4) {
+        data = data.slice(0, 5);
         getseemoreBtn.classList.remove('d-none');
-    }else{
+    } else {
         getseemoreBtn.classList.add('d-none');
-      
+
     }
-  
-   
+
+
     loadSpiner(true);
     const cardContainer = document.getElementById('card-container');
     data.forEach(data => {
-        
+        console.log('%c⧭', 'color: #e50000', data);
+
         const addNewDiv = document.createElement('div');
         addNewDiv.classList.add('col', 'mt-3');
-        
+
         addNewDiv.innerHTML = `
     <div class="card" style="width: 20rem;">
                 <img src="${data.image}" class="card-img-top" alt="...">
@@ -79,32 +80,38 @@ const dataShow = (data,datalimit) => {
     loadSpiner(false);
 
 }
-document.getElementById('seemore-btn').addEventListener('click',function(){
+document.getElementById('seemore-btn').addEventListener('click', function () {
     loadData();
-    
+
 })
 
-const detailsInModal= async(id)=>{
-    const url ='https://openapi.programming-hero.com/api/ai/tool/${id}';
-    const res=await fetch(url);
-    const data=await res.json();
-    
-    setDataOnModal(data.data);
+const detailsInModal = async name => {
+    const url = 'https://openapi.programming-hero.com/api/ai/tool/${name}';
+    const res = await fetch(url);
+    const data = await res.json();
+    console.log(data);
+    setDataOnModal(data);
 
 }
-const setDataOnModal=(data)=>{
+const setDataOnModal = (data) => {
     console.log(data);
-    const getModalSection=document.getElementById('modal-section');
-    const createNewDivInModalSection=document.createElement('div');
-    createNewDivInModalSection.innerHTML=`
-     <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    const getModalSection = document.getElementById('modal-section');
+    const createNewDivInModalSection = document.createElement('div');
+    createNewDivInModalSection.innerHTML = `
+     <div class=" modal-lg modal fade" id="modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         
                         <div class="modal-body d-flex flex-row m-5 gap-3">
-                            <div class="card rounded-3  " style="width: 18rem;">
-                                <div class="card-body">
+                            <div class="card rounded-3 border border-danger " style="width: 18rem;">
+                                <div class=" bg-danger-subtle card-body">
 
+                            <h1 class="fs-5 text">ChatGPT is a large language model developed by OpenAI that can generate human-like responses in a conversation.</h1>
+<div class="card" style="width: 7rem;">
+  <div class="card-body">
+    <h5 class="text-success fs-6 card-title">10/ month Basic Basic</h5>
+  </div>
+</div>
                                 </div>
                             </div>
                             <div class="rounded-3  card" style="width: 18rem;">
@@ -124,7 +131,7 @@ const setDataOnModal=(data)=>{
     
     `;
     getModalSection.appendChild(createNewDivInModalSection);
-    
+
 }
 
 loadData(4);
